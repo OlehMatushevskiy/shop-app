@@ -1,6 +1,6 @@
 
 import { Op } from 'sequelize';
-import { getOrdersFilter } from '../services/shop.service.js';
+import { getOrdersFilter , createNewOrder, updateOrderById } from '../services/shop.service.js';
 import Order from '../models/order.model.js';
 
 
@@ -10,13 +10,7 @@ export const updateOrder = async (req,res) => {
 
         const { id } = req.params;
 
-        const order = await Order.findByPk(id);
-
-        if(!order) {
-            throw new Error(`Order with ${id} not found, try another`);
-        }
-        
-        await order.update(req.body);
+        await updateOrderById(id,req.body);
 
         res.status(200).json({
             message: `Order with id: ${id} succesfully updated`,
@@ -32,7 +26,7 @@ export const deleteOrder = async (req,res) => {
     
     try {
 
-        const { id } = req.body;
+        const { id } = req.params;
         
         if (id == null){
             throw new Error("Need id to delete order");
@@ -68,11 +62,7 @@ export const createOrder = async (req, res) => {
             throw new Error("Cost cannot be negative");
         }
 
-        const newOrder = await Order.create({
-            createdAt: date,
-            category: category,
-            cost: cost
-        });
+        const newOrder = await createNewOrder(date ,category, cost);
 
         res.status(201).json({
             message: 'Order succesfully created in postgres',

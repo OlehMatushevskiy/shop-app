@@ -4,13 +4,10 @@ import { createOrder, deleteOrder, updateOrder , getOrders } from '../controller
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.status(200).send('/orders page to see all orders');
-});
+router.get('/', getOrders);
 
 router.patch('/:id',updateOrder);
-router.delete('/',deleteOrder);
-router.post('/create', createOrder);
-router.get('/orders', getOrders);
+router.delete('/:id',deleteOrder);
+router.post('/', createOrder);
 
 export default router;
